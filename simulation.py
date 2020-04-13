@@ -4,14 +4,12 @@ import random
 
 
 class Person(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed_x, speed_y):
+    def __init__(self, x, y, dx, dy):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([3, 3])
-        self.image.fill((255, 0, 0))
-        self.rect = self.image.get_rect()
-        self.rect.center = [x, y]
-        self.speed_x = speed_x
-        self.speed_y = speed_y
+        self.rect = pygame.Rect(0, 0, 6, 6)
+        self.rect.center = (x, y)
+        self.dx = dx
+        self.dy = dy
 
 
 people = []
@@ -19,6 +17,7 @@ people = []
 clock = pygame.time.Clock()
 
 pygame.init()
+pygame.display.set_caption('Memetic Evolution Simulation')
 screen = pygame.display.set_mode((1000, 1000), 0, 32)
 
 
@@ -29,18 +28,23 @@ def random_speed():
 running = True
 while running:
     screen.fill((0, 0, 0))
-    pygame.draw.circle(screen, (125, 125, 125), (500, 500), 250)
+    # border = pygame.draw.rect(screen, (125, 125, 125),
+    #                           (250, 250, 500, 500), 3)
 
     people.append(Person(500, 500, random_speed(), random_speed()))
 
     for person in people:
-        person.rect.x += person.speed_x
-        person.rect.y += person.speed_y
-        person.speed_x += random_speed()
-        person.speed_y += random_speed()
+        person.rect.x += person.dx
+        person.rect.y += person.dy
+        # if person.rect.x >= 750 or person.rect.x <= 250 or person.rect.y >= 750 or person.rect.y <= 250:
+        #     person.dx *= - 1
+        #     person.dy *= - 1
+        # else:
+        person.dx += random_speed()
+        person.dy += random_speed()
 
-        pygame.draw.circle(screen, (255, 255, 255),
-                           (int(person.rect.x), int(person.rect.y)), 3)
+        pygame.draw.rect(screen, (255, 255, 255),
+                         person.rect)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
