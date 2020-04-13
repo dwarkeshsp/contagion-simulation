@@ -3,10 +3,13 @@ import sys
 import random
 
 
-class Person:
+class Person(pygame.sprite.Sprite):
     def __init__(self, x, y, speed_x, speed_y):
-        self.x = x
-        self.y = y
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([3, 3])
+        self.image.fill((255, 0, 0))
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
         self.speed_x = speed_x
         self.speed_y = speed_y
 
@@ -31,13 +34,13 @@ while running:
     people.append(Person(500, 500, random_speed(), random_speed()))
 
     for person in people:
-        person.x += person.speed_x
-        person.y += person.speed_y
+        person.rect.x += person.speed_x
+        person.rect.y += person.speed_y
         person.speed_x += random_speed()
         person.speed_y += random_speed()
 
         pygame.draw.circle(screen, (255, 255, 255),
-                           (int(person.x), int(person.y)), 3)
+                           (int(person.rect.x), int(person.rect.y)), 3)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
