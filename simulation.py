@@ -27,10 +27,14 @@ class Person(pygame.sprite.Sprite):
             return random.randint(0, 20) / 10 - 1
 
         def gravity(x):
-            gravity = (CENTER - x) ** 2 / 5000.0
+            gravity = (CENTER - x) ** 2 / 100000.0
             if x > CENTER:
                 gravity *= -1
             return gravity
+
+        DECELERATION = 0.99
+        self.dx *= DECELERATION
+        self.dy *= DECELERATION
 
         self.dx += random_speed() + gravity(self.rect.x)
         self.dy += random_speed() + gravity(self.rect.y)
