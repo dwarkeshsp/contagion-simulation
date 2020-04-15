@@ -2,17 +2,24 @@ import pygame
 import sys
 import random
 
+CENTER = 500
+
 
 class Person(pygame.sprite.Sprite):
-    def __init__(self, x, y, status):
+    def __init__(self, status):
         pygame.sprite.Sprite.__init__(self)
         self.rect = pygame.Rect(0, 0, 5, 5)
-        self.rect.center = (x, y)
+
+        def random_location():
+            return random.randint(0, 200) - 100 + CENTER
+
+        self.rect.center = (random_location(), random_location())
         self.status = status
         self.dx = 0
         self.dy = 0
 
     def move(self):
+
         self.rect.x += self.dx
         self.rect.y += self.dy
 
@@ -31,8 +38,8 @@ class Person(pygame.sprite.Sprite):
         if self.status != 'sick':
             for person in people:
                 if person.status == 'sick' and self.rect.colliderect(person.rect):
-                    print('detected')
-                    self.status == 'sick'
+                    if 0.03 > random.randint(0, 100) / 100:
+                        self.status = 'sick'
 
         pygame.draw.rect(screen, self.color(), self.rect)
 
@@ -45,14 +52,14 @@ class Person(pygame.sprite.Sprite):
             return None
 
 
-CENTER = 500
-
 people = []
-people.append(Person(CENTER, CENTER, status='sick'))
+people.append(Person(status='sick'))
+for i in range(250):
+    people.append(Person(status='healthy'))
 
 clock = pygame.time.Clock()
 pygame.init()
-pygame.display.set_caption('Memetic Evolution Simulation')
+pygame.display.set_caption('COVID Simulation')
 screen = pygame.display.set_mode((1000, 1000), 0, 32)
 
 
@@ -60,8 +67,6 @@ running = True
 
 while running:
     screen.fill((0, 0, 0))
-    if len(people) < 100:
-        people.append(Person(CENTER, CENTER, status='healthy'))
 
     for person in people:
         person.move()
@@ -71,4 +76,4 @@ while running:
             running = False
 
     pygame.display.update()
-    clock.tick(100)
+    clock.tick(50)
