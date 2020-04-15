@@ -15,6 +15,7 @@ class Person(pygame.sprite.Sprite):
 
         self.rect.center = (random_location(), random_location())
         self.status = status
+        self.days_sick = 0.0
         self.dx = 0
         self.dy = 0
 
@@ -42,8 +43,14 @@ class Person(pygame.sprite.Sprite):
         if self.status != 'sick':
             for person in people:
                 if person.status == 'sick' and self.rect.colliderect(person.rect):
-                    if 0.03 > random.randint(0, 100) / 100:
+                    if 0.05 > random.randint(0, 100) / 100:
                         self.status = 'sick'
+
+        if self.status == 'sick':
+            self.days_sick += 0.05
+            recovered = (self.days_sick + random.randint(0, 10)) / 100.0
+            if 0.2 < recovered:
+                self.status = 'immune'
 
         pygame.draw.rect(screen, self.color(), self.rect)
 
@@ -52,13 +59,14 @@ class Person(pygame.sprite.Sprite):
             return (255, 255, 255)
         if self.status == 'sick':
             return (255, 255, 0)
-        else:
-            return None
+        if self.status == 'immune':
+            return (255, 20, 147)
 
 
 people = []
-people.append(Person(status='sick'))
-for i in range(250):
+for _ in range(5):
+    people.append(Person(status='sick'))
+for _ in range(250):
     people.append(Person(status='healthy'))
 
 clock = pygame.time.Clock()
