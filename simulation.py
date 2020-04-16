@@ -1,12 +1,21 @@
 import pygame
 import sys
 import random
+import matplotlib.pyplot as plt
+import numpy as np
 from person import Person
+from plotter import plotter
+
+POPULATION = 500
+INITIAL_SICK = 5
+
+SPREAD_PROB = 0.05
+DURATION = 14
 
 people = []
-for _ in range(5):
+for _ in range(INITIAL_SICK):
     people.append(Person(status='sick'))
-for _ in range(250):
+for _ in range(POPULATION - INITIAL_SICK):
     people.append(Person(status='healthy'))
 
 clock = pygame.time.Clock()
@@ -28,12 +37,13 @@ while running:
                 if other_person is not person and other_person.status == 'sick':
                     if person.rect.colliderect(other_person.rect):
                         CONTRACT_PROB = random.randint(0, 100) / 100
-                        if 0.05 > CONTRACT_PROB:
+                        if SPREAD_PROB > CONTRACT_PROB:
                             person.status = 'sick'
 
         if person.status == 'sick':
-            person.days_sick += 0.05
-            recovered = (person.days_sick + random.randint(0, 10)) / 100.0
+            person.days_sick += 1
+            recovered = (person.days_sick * (1 / DURATION) +
+                         random.randint(0, 20) - 10) / 100.0
             if 0.2 < recovered:
                 person.status = 'immune'
 

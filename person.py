@@ -12,7 +12,7 @@ class Person(pygame.sprite.Sprite):
         self.rect = pygame.Rect(0, 0, 5, 5)
 
         def random_location():
-            return random.randint(0, 200) - 100 + CENTER
+            return random.randint(0, 300) - 150 + CENTER
 
         self.rect.center = (random_location(), random_location())
         self.status = status
