@@ -4,13 +4,13 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 from person import Person
-from plotter import plotter
+from plotter import plot
 
 POPULATION = 500
 INITIAL_SICK = 5
 
-SPREAD_PROB = 0.05
-DURATION = 14
+CONTAGIOUSNESS = 0.05
+AVG_RECOVERY_TIME = 14
 
 people = []
 for _ in range(INITIAL_SICK):
@@ -20,38 +20,55 @@ for _ in range(POPULATION - INITIAL_SICK):
 
 clock = pygame.time.Clock()
 pygame.init()
-pygame.display.set_caption('COVID Simulation')
+pygame.display.set_caption('Contagion Simulation')
 screen = pygame.display.set_mode((1000, 1000), 0, 32)
 
-
+data = []
 running = True
 
+graph_button = pygame.Rect(800, 800, 140, 50)
+graph_button_text = pygame.font.SysFont(
+    'manjari', 50).render('Graph', True, (255, 255, 255))
+
 while running:
+
     screen.fill((0, 0, 0))
+    screen.blit(graph_button_text, (800, 800))
+
+    data.append([0, 0, 0])
 
     for person in people:
         person.move()
 
         if person.status == 'healthy':
-            for other_person in people:
-                if other_person is not person and other_person.status == 'sick':
-                    if person.rect.colliderect(other_person.rect):
-                        CONTRACT_PROB = random.randint(0, 100) / 100
-                        if SPREAD_PROB > CONTRACT_PROB:
-                            person.status = 'sick'
+            data[len(data) - 1][0] += 1
 
         if person.status == 'sick':
+            data[len(data) - 1][1] += 1
+
+            for other_person in people:
+                if other_person.status == 'healthy' and person.rect.colliderect(other_person.rect):
+                    CONTRACT_PROB = random.randint(0, 100) / 100
+                    if CONTAGIOUSNESS > CONTRACT_PROB:
+                        other_person.status = 'sick'
+
             person.days_sick += 1
-            recovered = (person.days_sick * (1 / DURATION) +
-                         random.randint(0, 20) - 10) / 100.0
-            if 0.2 < recovered:
+            RECOVERY_PROB = (person.days_sick + random.randint(0, 10) - 5) / 10
+            if AVG_RECOVERY_TIME < RECOVERY_PROB:
                 person.status = 'immune'
+
+        if person.status == 'immune':
+            data[len(data) - 1][2] += 1
 
         pygame.draw.rect(screen, person.color(), person.rect)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if graph_button.collidepoint(pygame.mouse.get_pos()):
+                plot(data)
 
     pygame.display.update()
     clock.tick(50)

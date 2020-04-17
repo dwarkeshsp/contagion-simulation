@@ -16,7 +16,7 @@ class Person(pygame.sprite.Sprite):
 
         self.rect.center = (random_location(), random_location())
         self.status = status
-        self.days_sick = 0.0
+        self.days_sick = 0
         self.dx = 0
         self.dy = 0
 
@@ -34,12 +34,12 @@ class Person(pygame.sprite.Sprite):
                 gravity *= -1
             return gravity
 
+        self.dx += random_speed() + gravity(self.rect.x)
+        self.dy += random_speed() + gravity(self.rect.y)
+
         DECELERATION = 0.99
         self.dx *= DECELERATION
         self.dy *= DECELERATION
-
-        self.dx += random_speed() + gravity(self.rect.x)
-        self.dy += random_speed() + gravity(self.rect.y)
 
     def color(self):
         if self.status == 'healthy':
