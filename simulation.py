@@ -22,29 +22,29 @@ clock = pygame.time.Clock()
 pygame.init()
 pygame.display.set_caption('Contagion Simulation')
 screen = pygame.display.set_mode((1000, 1000), 0, 32)
-
-data = []
-running = True
-
 graph_button = pygame.Rect(800, 800, 140, 50)
 graph_button_text = pygame.font.SysFont(
     'manjari', 50).render('Graph', True, (255, 255, 255))
 
+data = [[], [], []]
+i = 0
+
+running = True
+graphed = False
+
 while running:
 
     screen.fill((0, 0, 0))
-    screen.blit(graph_button_text, (800, 800))
+    # screen.blit(graph_button_text, (800, 800))
 
-    data.append([0, 0, 0])
+    for ray in data:
+        ray.append(0)
 
     for person in people:
         person.move()
 
-        if person.status == 'healthy':
-            data[len(data) - 1][0] += 1
-
         if person.status == 'sick':
-            data[len(data) - 1][1] += 1
+            data[0][i] += 1
 
             for other_person in people:
                 if other_person.status == 'healthy' and person.rect.colliderect(other_person.rect):
@@ -58,17 +58,26 @@ while running:
                 person.status = 'immune'
 
         if person.status == 'immune':
-            data[len(data) - 1][2] += 1
+            data[1][i] += 1
+
+        if person.status == 'healthy':
+            data[2][i] += 1
 
         pygame.draw.rect(screen, person.color(), person.rect)
+
+    if data[0][i] == 0 and not graphed:
+        plot(data)
+        graphed = True
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if graph_button.collidepoint(pygame.mouse.get_pos()):
-                plot(data)
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     if graph_button.collidepoint(pygame.mouse.get_pos()):
+        #         plot(data)
 
     pygame.display.update()
     clock.tick(50)
+
+    i += 1
