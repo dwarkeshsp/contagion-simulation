@@ -1,5 +1,4 @@
 import random
-import sys
 import pygame
 
 
@@ -8,12 +7,11 @@ CENTER = 500
 
 class Person(pygame.sprite.Sprite):
     def __init__(self, status):
-        pygame.sprite.Sprite.__init__(self)
-        self.rect = pygame.Rect(0, 0, 5, 5)
 
         def random_location():
             return random.randint(0, 300) - 150 + CENTER
 
+        self.rect = pygame.Rect(0, 0, 5, 5)
         self.rect.center = (random_location(), random_location())
         self.status = status
         self.days_sick = 0

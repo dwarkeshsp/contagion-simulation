@@ -1,8 +1,5 @@
 import pygame
-import sys
 import random
-import matplotlib.pyplot as plt
-import numpy as np
 from person import Person
 from plotter import plot
 
@@ -35,7 +32,6 @@ graphed = False
 while running:
 
     screen.fill((0, 0, 0))
-    # screen.blit(graph_button_text, (800, 800))
 
     for ray in data:
         ray.append(0)
@@ -72,10 +68,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        #     if graph_button.collidepoint(pygame.mouse.get_pos()):
-        #         plot(data)
 
     pygame.display.update()
     clock.tick(50)
