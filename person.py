@@ -9,7 +9,7 @@ class Person(pygame.sprite.Sprite):
     def __init__(self, status):
 
         def random_location():
-            return random.randint(0, 300) - 150 + CENTER
+            return random.randint(0, 400) - 200 + CENTER
 
         self.rect = pygame.Rect(0, 0, 5, 5)
         self.rect.center = (random_location(), random_location())

@@ -1,7 +1,7 @@
 import pygame
 import random
+import matplotlib.pyplot as plt
 from person import Person
-from plotter import plot
 
 POPULATION = 500
 INITIAL_SICK = 5
@@ -20,11 +20,9 @@ pygame.init()
 pygame.display.set_caption('Contagion Simulation')
 screen = pygame.display.set_mode((1000, 1000), 0, 32)
 
-data = [[], [], []]
-i = 0
-
 running = True
 graphed = False
+data = [[], [], []]
 
 while running:
 
@@ -37,7 +35,7 @@ while running:
         person.move()
 
         if person.status == 'sick':
-            data[0][i] += 1
+            data[0][len(data[0]) - 1] += 1
 
             for other_person in people:
                 if other_person.status == 'healthy' and person.rect.colliderect(other_person.rect):
@@ -51,15 +49,20 @@ while running:
                 person.status = 'immune'
 
         if person.status == 'immune':
-            data[1][i] += 1
+            data[1][len(data[0]) - 1] += 1
 
         if person.status == 'healthy':
-            data[2][i] += 1
+            data[2][len(data[0]) - 1] += 1
 
         pygame.draw.rect(screen, person.color(), person.rect)
 
-    if data[0][i] == 0 and not graphed:
-        plot(data)
+    if data[0][len(data[0]) - 1] == 0 and not graphed:
+        plt.title('Contagion Spread Graph')
+        x = range(len(data[0]))
+        plt.stackplot(x, data, labels=['sick', 'immune', 'healthy'], colors=[
+                      'orange', 'blue', 'green'])
+        plt.legend(loc='upper left')
+        plt.show()
         graphed = True
 
     for event in pygame.event.get():
@@ -68,5 +71,3 @@ while running:
 
     pygame.display.update()
     clock.tick(50)
-
-    i += 1
