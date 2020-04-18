@@ -19,9 +19,6 @@ clock = pygame.time.Clock()
 pygame.init()
 pygame.display.set_caption('Contagion Simulation')
 screen = pygame.display.set_mode((1000, 1000), 0, 32)
-graph_button = pygame.Rect(800, 800, 140, 50)
-graph_button_text = pygame.font.SysFont(
-    'manjari', 50).render('Graph', True, (255, 255, 255))
 
 data = [[], [], []]
 i = 0
